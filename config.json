@@ -1,0 +1,34 @@
+{
+	"fucking hell":true,
+	"showProc":true,
+	"showMem":true,
+	"showLoad":true,
+	"showUptime":true,
+	"showFS":true,
+	"showUname":true,
+	"showUnameKernelDetails":true,
+	"showHostname":true,
+	"showDirSize":true,
+	"showNet":true,
+	"memDivider":10,
+	"memUnit":"MiB",
+	"diskDivider":20,
+	"diskUnit":"GiB",
+	"dirSizeDivider":10,
+	"dirSizeUnit":"MiB",
+	"column":true,
+	"hostname":"localhost",
+	"port":"3333",
+	"reloadTime":5,
+	"filesystems":[
+		"/mnt/a/",
+		"/mnt/b/"
+		],
+	"dirDU":[
+		"/var/log/portage",
+		"/tmp"
+		],
+	"net":[
+		"bond0",
+		"wlp3s0"
+		]}
