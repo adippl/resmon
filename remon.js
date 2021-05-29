@@ -2,9 +2,66 @@ const http=require('http');
 const fs=require('fs');
 const {execSync}=require("child_process");
 
-var cfgfile=fileToString("./config.json");
+const cfgfile=fileToString("./config.json");
 const cfg=JSON.parse(cfgfile);
+
+
 const Uname = checkUname();
+
+
+const cssr1=`
+<style>
+	body{
+		color: #14ff00;
+		background: black;
+	}
+	.column {
+		float: left;
+		width: 50%;
+	}
+	/* Clear floats after the columns */
+	.row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+</style>`
+const cssr2=`
+<style>
+	body{
+		color: #f7d20c;
+		background: black;
+	}
+	.column {
+		float: left;
+		width: 50%;
+	}
+	/* Clear floats after the columns */
+	.row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+</style>`
+
+const cssr3=`
+<style>
+	body{
+		color: white;
+		background: black;
+	}
+	.column {
+		float: left;
+		width: 50%;
+	}
+	/* Clear floats after the columns */
+	.row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+</style>`
+
 
 const getTopCpu="ps auxw|sort -rk3|head -n10|awk -v b=1 -v e=11 'BEGIN{FS=OFS=\" \"} NR>=2 {for (i=b;i<=e;i++) printf \"%s%s\", $i, (i<e ? OFS : ORS)}'";
 const getTopMem="ps auxw|sort -rk4|head -n10|awk -v b=1 -v e=11 'BEGIN{FS=OFS=\" \"} NR>=2 {for (i=b;i<=e;i++) printf \"%s%s\", $i, (i<e ? OFS : ORS)}'";
@@ -155,13 +212,15 @@ function htmlgen(res,st){
 	<meta charset="utf-8">
 	<title>resmon ${st.hostname}.${st.domainname}</title>
 	<meta name="description" content="The HTML5">
-	<meta name="author" content="SitePoint">
+	<meta name="author" content="SitePoint">`
+	let script=`
 	<script type = "text/JavaScript">
 		<!--
 			function AutoRefresh( t ) {
 				setTimeout("location.reload(true);", t);}
 		//-->
-	</script>
+	</script>`
+	let css=`
 	<style>
 		.column {
 			float: left;
@@ -173,13 +232,24 @@ function htmlgen(res,st){
 			display: table;
 			clear: both;
 		}
-	</style>
+	</style>`
+	let head2=`
 </head>
 <body onload = "JavaScript:AutoRefresh(${1000*cfg.reloadTime});">`;
 	let tail=`
 </body>
 </html>`;
 	res.write(head);
+	res.write(script);
+	if(cfg.retro==1){
+		res.write(cssr1);}
+	else if(cfg.retro==2){
+		res.write(cssr2);}
+	else if(cfg.retro==3){
+		res.write(cssr3);}
+	else{
+		res.write(css);}
+	res.write(head2);
 	res.write(`<h1>${st.hostname}.${st.domainname}</h1>`);
 	if(cfg.column){
 		res.write(`<div class="row"><div class="column">`);}

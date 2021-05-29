@@ -17,9 +17,10 @@
 	"dirSizeDivider":10,
 	"dirSizeUnit":"MiB",
 	"column":true,
+	"retro":2,
 	"hostname":"localhost",
 	"port":"3333",
-	"reloadTime":5,
+	"reloadTime":9990,
 	"filesystems":[
 		"/mnt/a/",
 		"/mnt/b/"
