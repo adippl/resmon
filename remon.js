@@ -15,6 +15,9 @@ const cssr1=`
 		color: #14ff00;
 		background: black;
 	}
+	b{
+		color: #14a008;
+	}
 	.column {
 		float: left;
 		width: 50%;
@@ -31,6 +34,9 @@ const cssr2=`
 	body{
 		color: #f7d20c;
 		background: black;
+	}
+	b{
+		color: #937d09;
 	}
 	.column {
 		float: left;
@@ -49,6 +55,9 @@ const cssr3=`
 	body{
 		color: white;
 		background: black;
+	}
+	b{
+		color: grey;
 	}
 	.column {
 		float: left;
@@ -255,8 +264,8 @@ function htmlgen(res,st){
 		res.write(`<div class="row"><div class="column">`);}
 	res.write('<ul>');
 	if(cfg.showHostname){
-		res.write(`<li>hostname:&emsp; ${st.hostname}</li>`);
-		res.write(`<li>domainname:&emsp; ${st.domainname}</li>`);}
+		res.write(`<li><b>hostname:</b>&emsp; ${st.hostname}</li>`);
+		res.write(`<li><b>domainname:</b>&emsp; ${st.domainname}</li>`);}
 	if(cfg.showUptime){
 		//let d=new Date(st.uptime*1000).toISOString().substr(11, 8)
 		//res.write(`<h2>System uptime: ${d}</h2>`);
@@ -265,63 +274,63 @@ function htmlgen(res,st){
 		res.write(`<h2>System uptime: ${st.uptimePretty}</h2>`);}
 	if(cfg.showLoad){
 		res.write(`<h2>System load:&ensp; ${st.load1} ${st.load5} ${st.load15}</h2>`);
-		res.write(`<li>last min:&ensp; ${st.load1}</li>`);
-		res.write(`<li>last 5 mins:&ensp; ${st.load5}</li>`);
-		res.write(`<li>last 15 mins:&ensp; ${st.load15}</li>`);}
+		res.write(`<li><b>last min:</b>&ensp; ${st.load1}</li>`);
+		res.write(`<li><b>last 5 mins:</b>&ensp; ${st.load5}</li>`);
+		res.write(`<li><b>last 15 mins:</b>&ensp; ${st.load15}</li>`);}
 	if(cfg.showMem){
 		res.write(`<h2>Memory statistics</h2>`);
 		res.write(`<h3>Main Memory</h3>`);
 		let mt=Math.round(st.memTotal/(2**cfg.memDivider));
-		res.write(`<li>Total:&ensp; ${mt} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Total:</b>&ensp; ${mt} ${cfg.memUnit}</li>`);
 		let mf=Math.round(st.memFree/(2**cfg.memDivider));
-		res.write(`<li>Free:&ensp; ${mf} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Free:</b>&ensp; ${mf} ${cfg.memUnit}</li>`);
 		let ma=Math.round(st.memAval/(2**cfg.memDivider));
-		res.write(`<li>Avalible:&ensp; ${ma} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Avalible:</b>&ensp; ${ma} ${cfg.memUnit}</li>`);
 		let mc=Math.round(st.memCache/(2**cfg.memDivider));
-		res.write(`<li>Cache:&ensp; ${mc} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Cache:</b>&ensp; ${mc} ${cfg.memUnit}</li>`);
 		let mb=Math.round(st.memBuff/(2**cfg.memDivider));
-		res.write(`<li>Buffers:&ensp; ${mb} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Buffers:</b>&ensp; ${mb} ${cfg.memUnit}</li>`);
 		res.write(`<h3>Swap</h3>`);
 		let swt=Math.round(st.swapTotal/(2**cfg.memDivider));
-		res.write(`<li>Total:&ensp; ${swt} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Total:</b>&ensp; ${swt} ${cfg.memUnit}</li>`);
 		let swf=Math.round(st.swapFree/(2**cfg.memDivider));
-		res.write(`<li>Free:&ensp; ${swf} ${cfg.memUnit}</li>`);
+		res.write(`<li><b><b</b>Free:</b>&ensp; ${swf} ${cfg.memUnit}</li>`);
 		let swc=Math.round(st.swapCache/(2**cfg.memDivider));
-		res.write(`<li>Free:&ensp; ${swc} ${cfg.memUnit}</li>`);
+		res.write(`<li><b>Cached:</b>&ensp; ${swc} ${cfg.memUnit}</li>`);
 		}
 	if(cfg.showUname){
 		res.write(`<h2>Hardware details</h2>`);
-		res.write(`<li>OS:&emsp; ${st.unameOperaingSystem}</li>`);
-		res.write(`<li>Architecture:&emsp; ${st.unameArch}</li>`);
-		res.write(`<li>CPU:&emsp; ${st.unameCPU}</li>`);
+		res.write(`<li><b>OS:</b>&emsp; ${st.unameOperaingSystem}</li>`);
+		res.write(`<li><b>Architecture:</b>&emsp; ${st.unameArch}</li>`);
+		res.write(`<li><b>CPU:</b>&emsp; ${st.unameCPU}</li>`);
 		if(cfg.showUnameKernelDetails){
-			res.write(`<li>Kernel Release:&emsp; ${st.unameKernRelease}</li>`);
-			res.write(`<li>Kernel Version:&emsp; ${st.unameKernVersion}</li>`);}}
+			res.write(`<li><b>Kernel Release:</b>&emsp; ${st.unameKernRelease}</li>`);
+			res.write(`<li><b>Kernel Version:</b>&emsp; ${st.unameKernVersion}</li>`);}}
 	if(cfg.column){
 		res.write(`</ul></div><div class="column"><ul>`);}
 	if(cfg.showFS){
 		res.write("<h2>Filesystems</h2>");
 		st.fs.forEach(function(v){
 			res.write(`<h3>${v.mpoint} used: ${v.usedPerc}%</h3>`);
-			res.write(`<li>Device:&ensp; ${v.dev}</li>`);
-			res.write(`<li>Percentage used:&ensp; ${v.usedPerc}%</li>`);
-			res.write(`<li>Size:&ensp; ${Math.round(v.size/(2**cfg.diskDivider))} ${cfg.diskUnit}</li>`);
-			res.write(`<li>Used:&ensp; ${Math.round(v.used/(2**cfg.diskDivider))} ${cfg.diskUnit}</li>`);
-			res.write(`<li>Free:&ensp; ${Math.round(v.free/(2**cfg.diskDivider))} ${cfg.diskUnit}</li>`);});}
+			res.write(`<li><b>Device:</b>&ensp; ${v.dev}</li>`);
+			res.write(`<li><b>Percentage used:</b>&ensp; ${v.usedPerc}%</li>`);
+			res.write(`<li><b>Size:</b>&ensp; ${Math.round(v.size/(2**cfg.diskDivider))} ${cfg.diskUnit}</li>`);
+			res.write(`<li><b>Used:</b>&ensp; ${Math.round(v.used/(2**cfg.diskDivider))} ${cfg.diskUnit}</li>`);
+			res.write(`<li><b>Free:</b>&ensp; ${Math.round(v.free/(2**cfg.diskDivider))} ${cfg.diskUnit}</li>`);});}
 	if(cfg.showDirSize){
 		res.write("<h2>Directory size</h2>");
 		st.du.forEach(function(v){
-			res.write(`<h3>${v.path} size: ${Math.round(v.sizeKB/2**cfg.dirSizeDivider)} ${cfg.dirSizeUnit}</h3>`);});}
+			res.write(`<h3><b>${v.path} size:</b> ${Math.round(v.sizeKB/2**cfg.dirSizeDivider)} ${cfg.dirSizeUnit}</h3>`);});}
 	if(cfg.showNet){
 		res.write(`<h2>Network Interfaces</h2>`);
 		st.net.forEach(function(v){
-			res.write(`<h3>Interface name:&ensp; ${v.name}</h3>`);
-			res.write(`<li>Interface mac:&ensp; ${v.mac}</li>`);
+			res.write(`<h3><b>Interface name:</b>&ensp; ${v.name}</h3>`);
+			res.write(`<li><b>Interface mac:</b>&ensp; ${v.mac}</li>`);
 			v.inet.forEach(function(ine){
 				if(ine==""){
-					res.write(`<li>Ip address:&ensp; NULL</li>`);}
-				else{
-					res.write(`<li>Ip address:&ensp; ${ine}</li>`);}
+					res.write(`<li><b>Ip address:</b>&ensp; NULL</li>`);}
+				else{                                
+					res.write(`<li><b>Ip address:</b>&ensp; ${ine}</li>`);}
 				});
 			});
 		}
