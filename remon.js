@@ -18,6 +18,9 @@ const cssr1=`
 	b{
 		color: #14a008;
 	}
+	button{
+		color: #14a008;
+	}
 	.column {
 		float: left;
 		width: 50%;
@@ -38,6 +41,9 @@ const cssr2=`
 	b{
 		color: #937d09;
 	}
+	button{
+		background-color: #937d09;
+	}
 	.column {
 		float: left;
 		width: 50%;
@@ -57,6 +63,9 @@ const cssr3=`
 		background: black;
 	}
 	b{
+		color: grey;
+	}
+	button{
 		color: grey;
 	}
 	.column {
@@ -227,8 +236,10 @@ function htmlgen(res,st){
 		<!--
 			function AutoRefresh( t ) {
 				setTimeout("location.reload(true);", t);}
+				
 		//-->
-	</script>`
+	</script>
+	`
 	let css=`
 	<style>
 		.column {
@@ -260,6 +271,10 @@ function htmlgen(res,st){
 		res.write(css);}
 	res.write(head2);
 	res.write(`<h1>${st.hostname}.${st.domainname}</h1>`);
+	res.write(`<button type="button" id="bs0">basic theme</button>`);
+	res.write(`<button type="button" id="bs1">retro green theme</button>`);
+	res.write(`<button type="button" id="bs2">retro amber theme</button>`);
+	res.write(`<button type="button" id="bs3">white on black theme</button>`);
 	if(cfg.column){
 		res.write(`<div class="row"><div class="column">`);}
 	res.write('<ul>');
@@ -336,7 +351,63 @@ function htmlgen(res,st){
 		}
 	if(cfg.column){
 		res.write(`</div>`);}
-
+	
+	let cancer=`
+		<script>
+			var bt0=document.getElementById("bs0");
+			var bt1=document.getElementById("bs1");
+			var bt2=document.getElementById("bs2");
+			var bt3=document.getElementById("bs3");
+			
+			function setTheme0(){
+				document.body.style.background = "white";
+				document.body.style.color = "black";
+				var bee=document.getElementsByTagName('b');
+				for(var i of bee){
+					i.style.color = "black";}
+				var btn=document.getElementsByTagName('button');
+				for(var i of btn){
+					i.style.backgroundColor = "white";}
+				}
+			
+			function setTheme1(){
+				document.body.style.background = "black";
+				document.body.style.color = "#14ff00";
+				var bee=document.getElementsByTagName('b');
+				for(var i of bee){
+					i.style.color = "#14a008";}
+				var btn=document.getElementsByTagName('button');
+				for(var i of btn){
+					i.style.backgroundColor = "#14a008";}
+				}
+			
+			function setTheme2(){
+				document.body.style.background = "black";
+				document.body.style.color = "#f7d20c";
+				var bee=document.getElementsByTagName('b');
+				for(var i of bee){
+					i.style.color = "#937d09";}
+				var btn=document.getElementsByTagName('button');
+				for(var i of btn){
+					i.style.backgroundColor = "#937d09";}
+				}
+			
+			function setTheme3(){
+				document.body.style.background = "black";
+				document.body.style.color = "white";
+				var bee=document.getElementsByTagName('b');
+				for(var i of bee){
+					i.style.color = "grey";}
+				var btn=document.getElementsByTagName('button');
+				for(var i of btn){
+					i.style.backgroundColor = "grey";}
+				}
+			bt0.onclick=setTheme0;
+			bt1.onclick=setTheme1;
+			bt2.onclick=setTheme2;
+			bt3.onclick=setTheme3;
+		</script>`
+	res.write(cancer);
 	res.write('</ul>');
 	res.write(tail);
 	}
