@@ -21,13 +21,21 @@ const fs = require('fs');
 const {
     execSync
 } = require("child_process");
-
-const cfgfile = fileToString("./config.json");
-const cfg = JSON.parse(cfgfile);
-
-
+console.log(process.argv);
+try {
+    if (fs.existsSync(process.argv[2])) {
+        cfgfile = fileToString(process.argv[2]);
+        cfg = JSON.parse(cfgfile);
+    } else {
+       console.log("provide path to config file as argument (argv[2])");
+       process.exit(1);
+    }
+} catch(err) {
+   console.error(err)
+   console.log("provide path to config file as argument (argv[2])");
+   process.exit(1);
+}
 const Uname = checkUname();
-
 
 const cssr1 = `
 <style>
@@ -109,18 +117,18 @@ const server = http.createServer((req, res) => {
         return
     }
 
-	else if (req.url == '/'){
-    	res.statusCode = 200;
-    	res.setHeader('Content-Type', 'text/html');
-    	htmlgen(res, makeServerStats());
-    	res.end();
-		}
-	else{
+    else if (req.url == '/'){
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html');
+        htmlgen(res, makeServerStats());
+        res.end();
+        }
+    else{
         res.statusCode = 400;
-    	res.setHeader('Content-Type', 'text/html');
-		res.write("bad request");
-		res.end();
-		}
+        res.setHeader('Content-Type', 'text/html');
+        res.write("bad request");
+        res.end();
+        }
 });
 
 server.listen(cfg.port, cfg.hostname, function() {
@@ -197,6 +205,7 @@ function makeServerStats() {
         obj.load1 = parseFloat(sload[0]);
         obj.load5 = parseFloat(sload[1]);
         obj.load15 = parseFloat(sload[2]);
+        obj.ncpu = parseInt(execSync("lscpu |awk '/^CPU:/ {print $2}'").toString().slice(0, -1).split('\n'));
     }
 
     if (cfg.showUptime) {
@@ -332,6 +341,9 @@ function htmlgen(res, st) {
     }
     if (cfg.showLoad) {
         res.write(`<h2>System load:&ensp; ${st.load1} ${st.load5} ${st.load15}</h2>`);
+        if (cfg.showBars) {
+            res.write(`<progress id="loadprog" value="${st.load1 * 100}" max="${st.ncpu * 100}"></progress>`);
+        }
         res.write(`<li><b>last min:</b>&ensp; ${st.load1}</li>`);
         res.write(`<li><b>last 5 mins:</b>&ensp; ${st.load5}</li>`);
         res.write(`<li><b>last 15 mins:</b>&ensp; ${st.load15}</li>`);
@@ -340,21 +352,27 @@ function htmlgen(res, st) {
         res.write(`<h2>Memory statistics</h2>`);
         res.write(`<h3>Main Memory</h3>`);
         let mt = Math.round(st.memTotal / (2 ** cfg.memDivider));
-        res.write(`<li><b>Total:</b>&ensp; ${mt} ${cfg.memUnit}</li>`);
         let mf = Math.round(st.memFree / (2 ** cfg.memDivider));
-        res.write(`<li><b>Free:</b>&ensp; ${mf} ${cfg.memUnit}</li>`);
         let ma = Math.round(st.memAval / (2 ** cfg.memDivider));
-        res.write(`<li><b>Avalible:</b>&ensp; ${ma} ${cfg.memUnit}</li>`);
         let mc = Math.round(st.memCache / (2 ** cfg.memDivider));
-        res.write(`<li><b>Cache:</b>&ensp; ${mc} ${cfg.memUnit}</li>`);
         let mb = Math.round(st.memBuff / (2 ** cfg.memDivider));
+        if (cfg.showBars) {
+            res.write(`<progress id="memprog" value="${mt - ma}" max="${mt}"></progress>`);
+        }
+        res.write(`<li><b>Total:</b>&ensp; ${mt} ${cfg.memUnit}</li>`);
+        res.write(`<li><b>Free:</b>&ensp; ${mf} ${cfg.memUnit}</li>`);
+        res.write(`<li><b>Avalible:</b>&ensp; ${ma} ${cfg.memUnit}</li>`);
+        res.write(`<li><b>Cache:</b>&ensp; ${mc} ${cfg.memUnit}</li>`);
         res.write(`<li><b>Buffers:</b>&ensp; ${mb} ${cfg.memUnit}</li>`);
-        res.write(`<h3>Swap</h3>`);
         let swt = Math.round(st.swapTotal / (2 ** cfg.memDivider));
-        res.write(`<li><b>Total:</b>&ensp; ${swt} ${cfg.memUnit}</li>`);
         let swf = Math.round(st.swapFree / (2 ** cfg.memDivider));
-        res.write(`<li><b><b</b>Free:</b>&ensp; ${swf} ${cfg.memUnit}</li>`);
         let swc = Math.round(st.swapCache / (2 ** cfg.memDivider));
+        res.write(`<h3>Swap</h3>`);
+        if (cfg.showBars) {
+            res.write(`<progress id="swapprog" value="${swt - swf}" max="${mt}"></progress>`);
+        }
+        res.write(`<li><b>Total:</b>&ensp; ${swt} ${cfg.memUnit}</li>`);
+        res.write(`<li><b><b</b>Free:</b>&ensp; ${swf} ${cfg.memUnit}</li>`);
         res.write(`<li><b>Cached:</b>&ensp; ${swc} ${cfg.memUnit}</li>`);
     }
     if (cfg.showUname) {

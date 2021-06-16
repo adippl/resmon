@@ -10,6 +10,7 @@
 	"showDomainname":true,
 	"showDirSize":true,
 	"showNet":true,
+	"showBars":true,
 	"memDivider":10,
 	"memUnit":"MiB",
 	"diskDivider":20,
